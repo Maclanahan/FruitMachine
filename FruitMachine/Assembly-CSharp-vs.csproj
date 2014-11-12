@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{AF70E9B7-99B2-7703-5250-4C2CF38EDC88}</ProjectGuid>
+	<ProjectGuid>{C019B0AF-6377-413E-8DB7-34E3446B6C3E}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -54,6 +54,8 @@
      <Compile Include="Assets\Scripts\Inventory.cs" />
      <Compile Include="Assets\Scripts\Item.cs" />
      <Compile Include="Assets\Scripts\ItemDatabase.cs" />
+     <Compile Include="Assets\Scripts\ItemGrabber.cs" />
+     <Compile Include="Assets\Scripts\ItemHolder.cs" />
      <Compile Include="Assets\Scripts\MovementInput.cs" />
      <Compile Include="Assets\Scripts\VerticalCamera.cs" />
      <Compile Include="Assets\Scripts\VerticalCameraZone.cs" />
@@ -70,12 +72,12 @@
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted.shader" />
      <None Include="Assets\Standard Assets\Tessellation Shaders\BumpedSpecularDisplacement.shader" />
  <Reference Include="Assembly-UnityScript-firstpass">
- <HintPath>C:/Users/Daniel/Documents/FruitMachine2/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
+ <HintPath>C:/Users/Daniel/Documents/GitHub/FruitMachine/FruitMachine/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
-      <Project>{482DDE14-2001-5C48-9771-685A378FA28A}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
+      <Project>{6E94B3AB-EE08-3E1B-8EFA-326DB67320F7}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
