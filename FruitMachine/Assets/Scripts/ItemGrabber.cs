@@ -30,7 +30,7 @@ public class ItemGrabber : MonoBehaviour {
     {
         if (other.gameObject.tag == "Item" && Input.GetButtonDown("Grab"))
         {
-            inventory.AddItem(other.gameObject.GetComponent<ItemHolder>().ID);
+            //inventory.AddItem(other.gameObject.GetComponent<ItemHolder>().ID);
             //inventory.AddItem(1);
             print("added");
             Destroy(other.gameObject);

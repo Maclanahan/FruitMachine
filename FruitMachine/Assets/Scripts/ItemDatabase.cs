@@ -8,11 +8,13 @@ public class ItemDatabase : MonoBehaviour
 
     void Start()
     {
+        //Debug.Log("here");
         setUpItems();
     }
 
     private void setUpItems()
     {
+        
         itemDatabase.Add(new Item("guy", 1, "It's a dude.", Item.ItemType.Consumable));
 
         itemDatabase.Add(new Item("ball", 2, "A naturally nutricious treat!", Item.ItemType.Consumable));

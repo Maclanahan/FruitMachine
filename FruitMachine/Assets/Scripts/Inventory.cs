@@ -3,6 +3,88 @@ using System.Collections;
 using System.Collections.Generic;
 public class Inventory : MonoBehaviour 
 {
+
+    public List<GameObject> Slots = new List<GameObject>();
+    public List<Item> Items = new List<Item>();
+    ItemDatabase database;
+    public GameObject slots;
+    public GameObject toolTip;
+    int x = -120;
+    int y = 160;
+
+    void Start()
+    {
+        int slotAmount = 0;
+
+        database = GameObject.FindGameObjectWithTag("ItemDatabase").GetComponent<ItemDatabase>();
+
+        for(int i = 0; i < 6; i++)
+        {
+            for(int j = 0; j < 5; j++)
+            {
+                GameObject slot = (GameObject)Instantiate(slots);
+                slot.GetComponent<SlotScript>().slotNumber = slotAmount;
+                Slots.Add(slot);
+
+                Items.Add(new Item());
+                slot.transform.parent = this.gameObject.transform;
+                slot.name = "slot" + i + "," + j;
+                slot.GetComponent<RectTransform>().localPosition = new Vector3(x + (60 * j), y - (60 * i), 0);
+
+                slotAmount++;
+            }
+            
+        }
+
+        addItem(1);
+        addItem(2);
+
+        Debug.Log(Items[0].name);
+        Debug.Log(Items[1].name);
+    }
+
+    void addItem(int id)
+    {
+        //Debug.Log(database.itemDatabase.Count);
+
+        for(int i = 0; i < database.itemDatabase.Count; i++)
+        {
+            if(database.itemDatabase[i].ID == id)
+            {
+                Item item = database.itemDatabase[i];
+                
+                addItemAtEmptySlot(item);
+                break;
+            }
+
+        }
+    }
+
+    void addItemAtEmptySlot(Item item)
+    {
+        for(int i = 0; i < Items.Count; i++)
+        {
+            if(Items[i].name == null)
+            {
+                Items[i] = item;
+                break;
+            }
+
+        }
+    }
+
+    public void showToolTip(Vector3 toolPosition, Item item)
+    {
+        toolTip.SetActive(true);
+        toolTip.GetComponent<RectTransform>().localPosition = new Vector3(toolPosition.x + 360)
+    }
+
+    public void closeToolTip()
+    {
+        toolTip.SetActive(false);
+    }
+
+    /*
     public List<Item> inventory = new List<Item>();
     
     public int slotsX;
@@ -33,14 +115,6 @@ public class Inventory : MonoBehaviour
         }
 
         database = GameObject.FindGameObjectWithTag("ItemDatabase").GetComponent<ItemDatabase>();
-
-        //AddItem(2);
-        //AddItem(1);
-        //RemoveItem(2);
-
-        //print(InventoryContains(12));
-        //inventory[0] = database.itemDatabase[0];
-        //inventory[1] = database.itemDatabase[1];
         
 	}
 
@@ -63,7 +137,7 @@ public class Inventory : MonoBehaviour
 
             if (showToolTip)
             {
-                GUI.Box(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y, 200, 200), tooltip, skin.GetStyle("ToolTip"));
+                GUI.Box(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y, 100, 50), tooltip, skin.GetStyle("ToolTip"));
             }
 
             
@@ -89,7 +163,8 @@ public class Inventory : MonoBehaviour
             for (int x = 0; x < slotsX; x++)
             {
                 Rect slotRect = new Rect(x * 60, y * 60, 50, 50);
-                GUI.Box(slotRect, ""/*, skin.GetStyle("Slot")*/);
+                GUI.Box(slotRect, ""/*, skin.GetStyle("Slot")*///);
+    /*
 
                 slots[i] = inventory[i];
 
@@ -200,4 +275,5 @@ public class Inventory : MonoBehaviour
         }
             return result;
     }
+                                                                  * */
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Item : MonoBehaviour
@@ -7,7 +8,7 @@ public class Item : MonoBehaviour
     public string name;
     public int ID;
     public string desc;
-    public Texture2D icon;
+    public Sprite icon;
     public ItemType type;
 
 
@@ -23,7 +24,7 @@ public class Item : MonoBehaviour
         name = _name;
         ID = _ID;
         desc = _description;
-        icon = Resources.Load<Texture2D>("ItemIcons/" + name);
+        icon = Resources.Load<Sprite>("ItemIcons/" + name);
         type = _type;
     }
 }
