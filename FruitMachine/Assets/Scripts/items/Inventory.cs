@@ -1,26 +1,128 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 public class Inventory : MonoBehaviour 
 {
+    public GameObject slotPrefab;
+    public Selector select;
 
+    private ItemDatabase database;
+    private List<GameObject> _inventorySlots = new List<GameObject>();
+
+
+    public void Start()
+    {
+        database = GameObject.FindGameObjectWithTag("ItemDatabase").GetComponent<ItemDatabase>();
+        //select = GameObject.FindGameObjectWithTag("Selector").GetComponent<Selector>();
+
+        setUpSlots();
+
+        //addItem(2);
+    }
+
+    private void setUpSlots()
+    {
+        int slotNum = 0;
+
+        for(int i = 0; i < 5; i++)
+        {
+            for(int j = 0; j < 5; j++)
+            {
+                GameObject slot = (GameObject)Instantiate(slotPrefab);
+                slot.GetComponent<SlotScript>().setItem(new Item());
+                slot.GetComponent<SlotScript>().setSelector(select);
+                slot.GetComponent<SlotScript>().setSlotNumber(slotNum);
+
+                slot.transform.parent = this.gameObject.transform;
+                slot.name = "slot" + i + ", " + j;
+                slot.GetComponent<RectTransform>().localPosition = new Vector3(180 + (60 * i), 160 - (60 * j), 0);
+
+                _inventorySlots.Add(slot);
+                slotNum++;
+            }
+        }
+    }
+
+    public bool addItem(int ID)
+    {
+        for (int i = 0; i < _inventorySlots.Count; i++ )
+        {
+            if (_inventorySlots[i].GetComponent<SlotScript>().isEmpty())
+            {
+                //print(ID);
+                _inventorySlots[i].GetComponent<SlotScript>().setItem(database.getItem(ID));
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
+    public List<GameObject> getSlots()
+    {
+        return _inventorySlots;
+    }
+
+    /*
     public List<GameObject> Slots = new List<GameObject>();
     public List<Item> Items = new List<Item>();
+
+    public List<GameObject> SpellSlots = new List<GameObject>();
+    public List<Item> SpellItems = new List<Item>();
+
     ItemDatabase database;
+    
     public GameObject slots;
     public GameObject toolTip;
-    int x = -120;
+    int x = 180;
     int y = 160;
+    private bool isVisible = false;
+    public GameObject draggedItemgameObject;
+    public bool draggingItem = false;
+    public Item draggedItem;
+    public int indexOfDraggedItem;
+    private int slotAmount = 0;
+
 
     void Start()
     {
-        int slotAmount = 0;
-
         database = GameObject.FindGameObjectWithTag("ItemDatabase").GetComponent<ItemDatabase>();
 
-        for(int i = 0; i < 6; i++)
+        setUpSpellSlots();
+        setupInventory();
+
+        //addItem(1);
+    }
+
+    private void setUpSpellSlots()
+    {
+        //int slotAmount = 0;
+
+        for(int i = 0; i < 3; i++)
         {
-            for(int j = 0; j < 5; j++)
+            GameObject slot = (GameObject)Instantiate(slots);
+            slot.GetComponent<SlotScript>().slotNumber = slotAmount;
+            SpellSlots.Add(slot);
+
+            SpellItems.Add(new Item());
+            slot.transform.parent = this.gameObject.transform;
+            slot.name = "spellslot" + i;
+            slot.GetComponent<RectTransform>().localPosition = new Vector3(-280 + (60 * i), y, 0);
+
+            slotAmount++;
+        }
+    }
+
+
+    private void setupInventory()
+    {
+        slotAmount = 0;
+
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < 5; j++)
             {
                 GameObject slot = (GameObject)Instantiate(slots);
                 slot.GetComponent<SlotScript>().slotNumber = slotAmount;
@@ -33,20 +135,38 @@ public class Inventory : MonoBehaviour
 
                 slotAmount++;
             }
-            
         }
-
-        addItem(1);
-        addItem(2);
-
-        Debug.Log(Items[0].name);
-        Debug.Log(Items[1].name);
     }
 
-    void addItem(int id)
+    void Update()
     {
-        //Debug.Log(database.itemDatabase.Count);
+        if (draggingItem)
+        {
+            Vector3 position = (Input.mousePosition - GameObject.FindGameObjectWithTag("Canvas").GetComponent<RectTransform>().localPosition);
+            draggedItemgameObject.GetComponent<RectTransform>().localPosition = new Vector3(position.x + 25, position.y - 25, position.z);
+        }
 
+        if (Input.GetButtonDown("Inventory"))
+        {
+            print("Button Pressed");
+            if (isVisible)
+            {
+                this.gameObject.GetComponent<CanvasGroup>().alpha = 0;
+                isVisible = false;
+            }
+
+            else
+            {
+                this.gameObject.GetComponent<CanvasGroup>().alpha = 1;
+                isVisible = true;
+            }
+        }
+
+        
+    }
+
+    public void addItem(int id)
+    {
         for(int i = 0; i < database.itemDatabase.Count; i++)
         {
             if(database.itemDatabase[i].ID == id)
@@ -60,7 +180,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    void addItemAtEmptySlot(Item item)
+    private void addItemAtEmptySlot(Item item)
     {
         for(int i = 0; i < Items.Count; i++)
         {
@@ -76,13 +196,31 @@ public class Inventory : MonoBehaviour
     public void showToolTip(Vector3 toolPosition, Item item)
     {
         toolTip.SetActive(true);
-        toolTip.GetComponent<RectTransform>().localPosition = new Vector3(toolPosition.x + 360)
+        //toolTip.GetComponent<RectTransform>().localPosition = new Vector3(toolPosition.x, toolPosition.y);
     }
 
     public void closeToolTip()
     {
         toolTip.SetActive(false);
     }
+
+    public void showDraggedItem(Item item, int slotNumber)
+    {
+        indexOfDraggedItem = slotNumber;
+        //draggedItemgameObject.SetActive(true);
+        GameObject.FindGameObjectWithTag("DraggingItem").GetComponent<CanvasGroup>().alpha = 1;
+        draggedItem = item;
+        draggingItem = true;
+        draggedItemgameObject.GetComponent<Image>().sprite = item.icon;
+    }
+
+    public void closedDraggedItem()
+    {
+        draggingItem = false;
+        GameObject.FindGameObjectWithTag("DraggingItem").GetComponent<CanvasGroup>().alpha = 0;
+
+    }
+
 
     /*
     public List<Item> inventory = new List<Item>();
@@ -276,4 +414,6 @@ public class Inventory : MonoBehaviour
             return result;
     }
                                                                   * */
+
+    
 }
